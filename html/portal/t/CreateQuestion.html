@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Questions</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    <header class="mainHeader">
+      <h1 class="header">Create Questions</h1>
+      <ul class="navLIST">
+          <li><a href="http://cs490testcenter.ddns.net:50000/portal/t/Home.php">Home</a></li>
+          <li><a href="http://cs490testcenter.ddns.net:50000">Sign Out</a></li>
+        </ul>
+      <br>
+    </header>
+    
+    <div class="container">
+      <div class="row justify-content-around">
+        <div class="col-6">
+          <form id="createQuestionForm" onsubmit="submitQuestion()">
+            <label for="questionDifficulty">Choose a Difficulty:</label>
+            <div class="col-2">
+              <select class="form-select-lg" name="questionDifficulty" id="questionDifficulty">
+                <option disabled selected value>--SELECT--</option>
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+            
+            <br><br>
+            
+            <label for="questionType">Choose a Type:</label>
+            <div class="col-2">
+              <select class="form-select-lg" name="questionType" id="questionType">
+                <option disabled selected value>--SELECT--</option>
+                <option value="For Loop">For Loop</option>
+                <option value="While Loop">While Loop</option>
+                <option value="Recursion">Recursion</option>
+                <option value="Arithmetic">Arithmetic</option>
+                <option value="Strings">Strings</option>
+              </select>
+            </div>
+            
+            <br><br>
+    
+            <!--Prompt-->
+            <label for="prompt">Enter in the Prompt:</label>
+            <br><br>
+            <textarea class="form-control" id="prompt" rows="10" placeholder="prompt text area"></textarea>
+            <br><br>
+    
+            <!--Choosing Constraints-->
+            <label for="constraints">Select Constraints:</label>
+            <br><br>
+            
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkFor">
+              <label class="form-check-label">For Loop</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkWhile">
+              <label class="form-check-label">While</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkRecursion">
+              <label class="form-check-label">Recursive</label>
+            </div>
+
+            <br><br>
+
+            <!--Test Cases-->
+            <button class="btn btn-success submit" type="button" onclick="addTestCase()">Add Test Case</button>
+            <br><br>
+    
+            <input class="btn btn-success submit" id="submit" type="submit" placeholder="Submit" class="submit"></input>
+          </form> 
+        </div>
+        
+        <div class="col-6">          
+          <div class="panel panel-primary filterable">
+            <div class="panel-heading">
+              <h3 class="panel-title">Questions</h3>
+                <div class="pull-right">
+                  <button class="btn btn-primary btn-xs btn-filter"><span class="glyphicon glyphicon-filter"></span>Filter</button>
+                </div>
+            </div>
+          
+            <table class="table">
+              <thead>
+                <tr class="filters">
+                  <th><input type="text" class="form-control" placeholder="Question" disabled></th>
+                  <th><input type="text" class="form-control" placeholder="Type" disabled></th>
+                  <th><input type="text" class="form-control" placeholder="Difficulty" disabled></th>
+                </tr>
+              </thead>
+
+              <tbody id="tableBody">
+              </tbody>
+            </table>
+          </div>  
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function(){
+        $('.filterable .btn-filter').click(function(){
+          var $panel = $(this).parents('.filterable'),
+          $filters = $panel.find('.filters input'),
+          $tbody = $panel.find('.table tbody');
+          if ($filters.prop('disabled') == true) {
+            $filters.prop('disabled', false);
+            $filters.first().focus();
+          } else {
+            $filters.val('').prop('disabled', true);
+            $tbody.find('.no-result').remove();
+            $tbody.find('tr').show();
+          }
+        });
+
+        $('.filterable .filters input').keyup(function(e){
+          /* Ignore tab key */
+          var code = e.keyCode || e.which;
+          if (code == '9') return;
+
+          /* Useful DOM data and selectors */
+          var $input = $(this),
+          $panel = $input.parents('.filterable'),
+          column = $panel.find('.filters th'),
+          $table = $panel.find('.table'),
+          $rows = $table.find('tbody tr');
+
+          /* Dirtiest filter function ever ;) */
+          var $filteredRows = $rows.filter(function(){
+            var q = $(this).find('td').eq(0).text().toLowerCase();
+            var t = $(this).find('td').eq(1).text().toLowerCase();
+            var d = $(this).find('td').eq(2).text().toLowerCase();
+
+            qi = q.indexOf(column[0].childNodes[0].value.toLowerCase());
+            ti = t.indexOf(column[1].childNodes[0].value.toLowerCase());
+            di = d.indexOf(column[2].childNodes[0].value.toLowerCase());
+
+            notValid = (qi === -1) || (ti === -1) || (di === -1);
+
+            return notValid;
+          });
+          /* Clean previous no-result if exist */
+          $table.find('tbody .no-result').remove();
+          /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+          $rows.show();
+          $filteredRows.hide();
+          /* Prepend no-result row if all rows are filtered */
+          if ($filteredRows.length === $rows.length) {
+            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
+          }
+        });
+      });
+
+      // add all necacarry event listeners
+      //submit listener
+      const form = document.getElementById("createQuestionForm");
+      function handleForm(event) { event.preventDefault(); } 
+      form.addEventListener('submit', handleForm);
+
+      let attemptMade = false;
+
+      const inputs = [];
+      const questions = [];
+
+      addTestCase();
+      addTestCase();
+      updateQuestionTable();
+      
+      function addTestCase(){
+        if(inputs.length < 5){
+          const testCase = document.createElement("input");
+          const result = document.createElement("input");
+
+          inputs.push({testCase,result});
+
+          document.getElementById("createQuestionForm").insertBefore(testCase, document.getElementById("submit"));
+          document.getElementById("createQuestionForm").insertBefore(document.createTextNode(" => "), document.getElementById("submit"));
+          document.getElementById("createQuestionForm").insertBefore(result, document.getElementById("submit"));
+          document.getElementById("createQuestionForm").insertBefore(document.createElement("br"), document.getElementById("submit"));
+        }
+      }
+      
+      function submitQuestion(){
+        var difficulty = document.getElementById('questionDifficulty').value;
+        var questionType = document.getElementById('questionType').value;
+        var prompt = document.getElementById('prompt').value;
+        var constraints = {
+          for: document.getElementById('checkFor').checked,
+          while: document.getElementById('checkWhile').checked,
+          recursive: document.getElementById('checkRecursion').checked
+        };
+
+        var inputvals = [];
+        var outputvals = [];
+
+        for(let i = 0; i < inputs.length; i++){
+          inputvals.push(inputs[i].testCase.value);
+          outputvals.push(inputs[i].result.value);
+        }
+
+        var anyinputempty = false;
+        
+        for(let i = 0; i < inputs.length; i++){
+          anyinputempty = inputs[i].testCase.value == "" || inputs[i].result.value == ""? true : anyinputempty
+        }
+
+        var requestType = 'CreateQuestionFTM';
+
+        if(difficulty == "" || questionType == "" || prompt == "" || anyinputempty){
+          if (!attemptMade) {
+            const newDiv = document.createElement("div");
+            const newContent = document.createTextNode("Cannot Submit: 1 or more fields invalid");
+            newDiv.appendChild(newContent);
+
+            document.getElementById("createQuestionForm").appendChild(document.createElement("br"));
+            document.getElementById("createQuestionForm").appendChild(newDiv);
+            attemptMade = true;
+          }
+          else{
+              document.getElementById("createQuestionForm").lastChild.innerHTML = "Cannot Submit: 1 or more fields invalid";
+          }
+        }else{
+          
+          const data = {difficulty, questionType, prompt, constraints, inputvals, outputvals, requestType};
+
+          const options = {
+            method:'POST',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(data)
+          };
+          fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+          .then(response => response.json())
+          .then(data => {
+            if(data.didWork == 1){
+              location.assign('http://cs490testcenter.ddns.net:50000/portal/t/CreateQuestion.html');
+            }else{
+              if (!attemptMade) {
+              const newDiv = document.createElement("div");
+              const newContent = document.createTextNode("Error Making Quesiton!");
+              newDiv.appendChild(newContent);
+
+              document.getElementById("createQuestionForm").appendChild(document.createElement("br"));
+              document.getElementById("createQuestionForm").appendChild(newDiv);
+              attemptMade = true;
+              }
+              else{
+                document.getElementById("createQuestionForm").lastChild.innerHTML = "Error Making Quesiton!";
+              }
+            } 
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+        }        
+      }
+
+      function updateQuestionTable(){
+        let requestType = "DisplayQuestionsFTM"
+        const data = {requestType};
+
+        const options = {
+          method:'POST',
+          headers: {
+              "Content-type": "application/json; charset=UTF-8"
+          },
+          body: JSON.stringify(data)
+        };
+        fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+        .then(response => response.json())
+        .then(data => {
+          for(let i = 0; i < data.length; i++){
+            const tr = document.createElement("tr");
+
+            const questionText = document.createElement("td");
+            const typeText = document.createElement("td");
+            const difficultyText = document.createElement("td");
+
+            questionText.innerHTML = data[i].question;
+            typeText.innerHTML = data[i].type;
+            difficultyText.innerHTML = data[i].difficulty;
+
+            tr.appendChild(questionText); 
+            tr.appendChild(typeText);
+            tr.appendChild(difficultyText);
+
+            questions.push({
+              question: data[i],
+              row: tr
+            });
+
+            document.getElementById("tableBody").appendChild(tr);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+    </script>
+  </body>
+</html>

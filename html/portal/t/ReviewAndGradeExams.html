@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Review Exam</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  </head>
+  <body>
+    <header class="mainHeader">
+      <h1 id="header" class="header">Review Exams</h1>
+      <ul class="navLIST">
+          <li><a href="http://cs490testcenter.ddns.net:50000/portal/t/Home.php">Home</a></li>
+          <li><a href="http://cs490testcenter.ddns.net:50000">Sign Out</a></li>
+        </ul>
+      <br>
+    </header>
+    
+    <div class="d-flex justify-content-center" id="backDiv">
+      <a id="goBackHome" href="http://cs490testcenter.ddns.net:50000/portal/t/Home.php">
+        <button class= "btn btn-success examReviewButtons">GO BACK HOME</button>
+      </a>
+    </div>   
+
+    <script>
+      function displayExams(){
+        var requestType = 'GetExamTeacherFTM';
+        const data = {requestType};
+
+        const options = {
+          method:'POST',
+          headers: {
+              "Content-type": "application/json; charset=UTF-8"
+          },
+          body: JSON.stringify(data)
+        };
+        
+        fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          //console.log(data);
+
+          for (const exam in data) {
+            const div = document.createElement("div");
+            div.setAttribute("class", "container");
+            const examName = document.createTextNode(exam + ": ");
+            div.appendChild(examName);
+
+            otherButton = document.createElement("input");
+            otherButton.setAttribute("type", "button");
+            otherButton.setAttribute("class", "btn btn-success examReviewButtons");
+            otherButton.value = "Grade All";
+
+            
+            otherButton.addEventListener("click", function(e){
+              var requestType = 'AutoGradeExamFTM';
+              var examName = exam;
+              data = {examName, requestType}
+              const options = {
+                method:'POST',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(data)
+              };
+              fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+              .then(response => {
+                return response.json();
+              })
+              .then(data => {
+                console.log(data);
+                location.assign('http://cs490testcenter.ddns.net:50000/portal/t/ReviewAndGradeExams.html');
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              }); 
+            });
+
+
+            div.appendChild(otherButton);
+            div.appendChild(document.createElement("br"));
+            for(let i = 0; i < data[exam].length; i++){
+              button = document.createElement("input")
+              button.setAttribute("type", "button");
+              button.setAttribute("class", "btn btn-success examReviewButtons");
+              button.value = data[exam][i].firstName+ " " + data[exam][i].lastName + " Pts: " + data[exam][i].totalPoints;
+              
+              button.addEventListener("click", function(e){
+                location.assign('http://cs490testcenter.ddns.net:50000/portal/t/ReviewExam.html?studentExamsID=' + data[exam][i].studentExamsID);
+              });
+              
+              div.appendChild(button);
+            }
+
+            document.body.insertBefore(div, document.getElementById("backDiv"));
+            document.body.insertBefore(document.createElement("br"), document.getElementById("backDiv"));
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });      
+      };
+      
+      displayExams();
+    </script>
+    
+  </body>
+</html> 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CS 490 Testing Center</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  </head>
+  <body>
+    <h1 class="text-center header" id="indexLog">Welcome to KNA University</h1><br>
+    <div class="row align-items-center justify-content-center">
+      <div class="col-2 align-self-center" id="divForm">
+        <form id="myForm" onsubmit="submitLogin()">
+          
+          <div class="form-group" >
+            <strong>User</strong><br>
+            <input  class="form-control" type="text" id="user" name="user" placeholder="User" required><br>
+          </div>
+          <br>
+
+          <div class="form-group" >
+            <strong>Password</strong><br>
+            <input class="form-control" type="password" id="pass" name="pass" placeholder="Password" required><br>
+          </div>
+          <br>
+
+          <input class="btn btn-success submit" id="submit" type="submit" placeholder="Submit" class="submit"></input>
+
+        </form>
+      </div>
+    </div>
+    
+    <script>
+      
+      const form = document.getElementById("myForm");
+      function handleForm(event) { event.preventDefault(); } 
+      form.addEventListener('submit', handleForm);
+      
+      let attemptMade = false;
+      
+      function submitLogin(){
+      
+        var user = document.getElementById('user').value;
+        var pass = document.getElementById('pass').value;
+        var requestType = 'LoginRequestFTM';
+        
+        const data = {user, pass, requestType};
+    
+        const options = {
+          method:'POST',
+          headers: {
+              "Content-type": "application/json; charset=UTF-8"
+          },
+          body: JSON.stringify(data)
+        };      
+        
+        fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+        .then(response =>  response.json())
+        .then(data => {
+          if (data.loginType === "0") {
+            location.assign('http://cs490testcenter.ddns.net:50000/portal/s/Home.php');
+          } else if (data.loginType === "1") {
+            location.assign('http://cs490testcenter.ddns.net:50000/portal/t/Home.php');
+          } else {
+            if (!attemptMade) {
+              const newContent = document.createElement("div");
+              newContent.setAttribute("class", "alert alert-danger");
+              newContent.appendChild(document.createTextNode("BAD LOGIN CREDENTIALS!"));
+            
+              const curr = document.getElementById("submit");
+              document.getElementById("myForm").insertBefore(newContent, curr);
+              document.getElementById("myForm").insertBefore(document.createElement("br"), curr);
+              attemptMade = true;
+            }
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+                
+      };
+      
+    </script>
+  </body>
+</html>

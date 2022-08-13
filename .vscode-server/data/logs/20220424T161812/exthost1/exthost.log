@@ -1,0 +1,15 @@
+[2022-04-24 16:18:13.610] [exthost] [info] Extension host with pid 1101887 started
+[2022-04-24 16:18:13.624] [exthost] [info] Lock '/home/kavin/dockerfiles/CS490container/.vscode-server/data/User/workspaceStorage/e2d8df456bc06488d56c202fecc35e35/vscode.lock': Lock acquired.
+[2022-04-24 16:18:13.676] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: true, activationEvent: '*'
+[2022-04-24 16:18:13.683] [exthost] [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+[2022-04-24 16:18:13.687] [exthost] [info] ExtensionService#_doActivateExtension vscode.ipynb, startup: true, activationEvent: '*'
+[2022-04-24 16:18:13.731] [exthost] [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+[2022-04-24 16:18:13.806] [exthost] [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+[2022-04-24 16:18:14.086] [exthost] [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onStartupFinished'
+[2022-04-24 16:18:14.105] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+[2022-04-24 16:18:14.110] [exthost] [info] Eager extensions activated
+[2022-04-24 16:22:18.640] [exthost] [info] ExtensionService#_doActivateExtension vscode.php-language-features, startup: false, activationEvent: 'onLanguage:php'
+[2022-04-24 16:22:27.798] [exthost] [info] ExtensionService#_doActivateExtension vscode.html-language-features, startup: false, activationEvent: 'onLanguage:html'
+[2022-04-25 09:43:15.450] [exthost] [info] extension host terminating: renderer disconnected for too long (1)
+[2022-04-25 09:43:15.451] [exthost] [info] Lock '/home/kavin/dockerfiles/CS490container/.vscode-server/data/User/workspaceStorage/e2d8df456bc06488d56c202fecc35e35/vscode.lock': Marking the lockfile as scheduled to be released in 6000 ms.
+[2022-04-25 09:43:15.467] [exthost] [info] Extension host with pid 1101887 exiting with code 0

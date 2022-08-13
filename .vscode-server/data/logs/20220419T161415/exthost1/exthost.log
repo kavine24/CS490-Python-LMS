@@ -1,0 +1,14 @@
+[2022-04-19 16:14:17.228] [exthost] [info] Extension host with pid 23668 started
+[2022-04-19 16:14:17.233] [exthost] [info] Lock '/home/kavin/dockerfiles/CS490container/.vscode-server/data/User/workspaceStorage/e2d8df456bc06488d56c202fecc35e35/vscode.lock': Lock acquired.
+[2022-04-19 16:14:17.409] [exthost] [info] ExtensionService#_doActivateExtension vscode.php-language-features, startup: false, activationEvent: 'onLanguage:php'
+[2022-04-19 16:14:17.427] [exthost] [info] ExtensionService#_doActivateExtension vscode.debug-auto-launch, startup: true, activationEvent: '*'
+[2022-04-19 16:14:17.431] [exthost] [info] ExtensionService#_doActivateExtension vscode.git-base, startup: true, activationEvent: '*', root cause: vscode.git
+[2022-04-19 16:14:17.436] [exthost] [info] ExtensionService#_doActivateExtension vscode.ipynb, startup: true, activationEvent: '*'
+[2022-04-19 16:14:17.523] [exthost] [info] ExtensionService#_doActivateExtension vscode.git, startup: true, activationEvent: '*'
+[2022-04-19 16:14:17.594] [exthost] [info] ExtensionService#_doActivateExtension vscode.github, startup: true, activationEvent: '*'
+[2022-04-19 16:14:17.731] [exthost] [info] ExtensionService#_doActivateExtension vscode.emmet, startup: false, activationEvent: 'onStartupFinished'
+[2022-04-19 16:14:17.749] [exthost] [info] ExtensionService#_doActivateExtension vscode.merge-conflict, startup: false, activationEvent: 'onStartupFinished'
+[2022-04-19 16:14:17.754] [exthost] [info] Eager extensions activated
+[2022-04-19 16:14:28.526] [exthost] [info] extension host terminating: received terminate message from renderer
+[2022-04-19 16:14:28.527] [exthost] [info] Lock '/home/kavin/dockerfiles/CS490container/.vscode-server/data/User/workspaceStorage/e2d8df456bc06488d56c202fecc35e35/vscode.lock': Marking the lockfile as scheduled to be released in 6000 ms.
+[2022-04-19 16:14:28.540] [exthost] [info] Extension host with pid 23668 exiting with code 0

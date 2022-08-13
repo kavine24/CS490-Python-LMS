@@ -1,0 +1,19 @@
+[2022-04-28 15:18:12.226] [remoteagent] [info] Extension host agent started.
+[2022-04-28 15:18:12.433] [remoteagent] [info] [127.0.0.1][181836fb][ManagementConnection] New connection established.
+[2022-04-28 15:18:12.435] [remoteagent] [info] [127.0.0.1][1857b4b0][ExtensionHostConnection] New connection established.
+[2022-04-28 15:18:12.441] [remoteagent] [info] [127.0.0.1][1857b4b0][ExtensionHostConnection] <2020462> Launched Extension Host Process.
+[2022-04-28 15:18:12.549] [remoteagent] [error] /home/kavin/dockerfiles/CS490container/.vscode-server/extensions/ms-vscode.references-view-0.0.89 Extension is not compatible with Code 1.65.2. Extension requires: ^1.66.0.
+[2022-04-28 15:18:19.659] [remoteagent] [info] [127.0.0.1][181836fb][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+[2022-04-28 15:18:19.679] [remoteagent] [info] [127.0.0.1][1857b4b0][ExtensionHostConnection] <2020462> Extension Host Process exited with code: 0, signal: null.
+[2022-04-28 15:18:19.679] [remoteagent] [info] Last EH closed, waiting before shutting down
+[2022-04-28 15:18:23.610] [remoteagent] [info] Got delay-shutdown request while in shutdown timeout, delaying
+[2022-04-28 15:18:23.610] [remoteagent] [info] Cancelling previous shutdown timeout
+[2022-04-28 15:18:23.840] [remoteagent] [info] [127.0.0.1][72ff511e][ManagementConnection] New connection established.
+[2022-04-28 15:18:23.870] [remoteagent] [info] [127.0.0.1][53e7f580][ExtensionHostConnection] New connection established.
+[2022-04-28 15:18:23.876] [remoteagent] [info] [127.0.0.1][53e7f580][ExtensionHostConnection] <2020667> Launched Extension Host Process.
+[2022-04-28 15:18:23.942] [remoteagent] [error] /home/kavin/dockerfiles/CS490container/.vscode-server/extensions/ms-vscode.references-view-0.0.89 Extension is not compatible with Code 1.65.2. Extension requires: ^1.66.0.
+[2022-04-28 15:20:03.951] [remoteagent] [info] [127.0.0.1][72ff511e][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+[2022-04-28 15:20:03.969] [remoteagent] [info] [127.0.0.1][53e7f580][ExtensionHostConnection] <2020667> Extension Host Process exited with code: 0, signal: null.
+[2022-04-28 15:20:03.969] [remoteagent] [info] Cancelling previous shutdown timeout
+[2022-04-28 15:20:03.969] [remoteagent] [info] Last EH closed, waiting before shutting down
+[2022-04-28 15:25:03.970] [remoteagent] [info] Last EH closed, shutting down

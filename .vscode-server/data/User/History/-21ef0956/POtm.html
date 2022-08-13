@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Questions</title>
+    <link rel="stylesheet" href="../../style.css">
+  </head>
+  <body>
+    <h1>Create Questions</h1>
+    <div class="split left">
+      <div class="centered">
+        <form id="createQuestionForm" class="forms" onsubmit="submitQuestion()">
+          <label for="questionDifficulty">Choose a Difficulty:</label>
+          <select name="questionDifficulty" id="questionDifficulty">
+            <option disabled selected value>--SELECT--</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          
+          <br><br>
+          
+          <label for="questionType">Choose a Type:</label>
+          <select name="questionType" id="questionType">
+            <option disabled selected value>--SELECT--</option>
+            <option value="forLoop">For Loop</option>
+            <option value="whileLoop">While Loop</option>
+            <option value="nestedForLoop">Nested For Loop</option>
+          </select>
+          
+          <br><br>
+  
+          <label for="prompt">Enter in the Prompt:</label>
+          <br><br>
+          <textarea id="prompt" name="prompt" rows="10" cols="50" placeholder="prompt text area"></textarea>
+          <br><br>
+  
+          <label for="constraints">Enter in the Constraints:</label>
+          <br><br>
+          <input id="constraints" name="constraints" placeholder="prompt constraints"></input>
+          <br><br>  
+          
+          <label for="prompt">Enter in the Answer:</label>
+          <br><br>
+          <textarea id="answer" name="answer" rows="10" cols="50" placeholder="answer text area"></textarea>
+          <br><br>
+  
+          <button type="button" onclick="addTestCase()">Add Test Case</button>
+          <br><br>
+  
+          <input id="submit" type="submit" placeholder="Submit" class="submit"></input>
+        </form> 
+      </div>   
+    </div>
+
+    <div class="split right">
+      <div class="centeredsearch" >
+        <label for="questionDifficulty">Choose a Difficulty:</label>
+          <select name="questionDifficulty" id="questionDifficulty">
+            <option disabled selected value>--SELECT--</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          
+          <br><br>
+          
+        <label for="questionType">Choose a Type:</label>
+          <select name="questionType" id="questionType">
+            <option disabled selected value>--SELECT--</option>
+            <option value="forLoop">For Loop</option>
+            <option value="whileLoop">While Loop</option>
+            <option value="nestedForLoop">Nested For Loop</option>
+          </select>
+          
+          <br><br>
+
+          <label for="keyword">Keyword Search:</label>
+          <br><br>
+          <input id="keyword" name="keyword" placeholder="keyword"></input>
+          <br><br>
+
+          <button type="button" onclick="">Search</button>
+          <br><br>
+         
+      </div>
+      <table>
+        <th>Question</th>
+        <th>Question Type</th>
+        <th>Question Difficulty</th>
+      </table>
+    </div>
+
+    <script>
+      // add all necacarry event listeners
+      //submit listener
+      const form = document.getElementById("createQuestionForm");
+      function handleForm(event) { event.preventDefault(); } 
+      form.addEventListener('submit', handleForm);
+
+      let attemptMade = false;
+
+      const inputs = [];
+
+      addTestCase();
+      updateQuestionTable();
+      function addTestCase(){
+        const testCase = document.createElement("input");
+        const result = document.createElement("input");
+
+        inputs.push({testCase,result});
+
+        document.getElementById("createQuestionForm").insertBefore(testCase, document.getElementById("submit"));
+        document.getElementById("createQuestionForm").insertBefore(document.createTextNode(" => "), document.getElementById("submit"));
+        document.getElementById("createQuestionForm").insertBefore(result, document.getElementById("submit"));
+        document.getElementById("createQuestionForm").insertBefore(document.createElement("br"), document.getElementById("submit"));
+      }
+      
+      function submitQuestion(){
+        //console.log(inputs);
+        var difficulty = document.getElementById('questionDifficulty').value;
+        var questionType = document.getElementById('questionType').value;
+        var prompt = document.getElementById('prompt').value;
+
+        // var answer = document.getElementById('answer').value;
+
+        var inputvals = [];
+        var outputvals = [];
+        for(let i = 0; i < inputs.length; i++){
+          inputvals.push(inputs[i].testCase.value);
+          outputvals.push(inputs[i].result.value);
+        }
+
+        // console.log(inputvals);
+
+        var anyinputempty = false;
+        
+        for(let i = 0; i < inputs.length; i++){
+          anyinputempty = inputs[i].testCase.value == "" || inputs[i].result.value == ""? true : anyinputempty
+        }
+
+        var requestType = 'CreateQuestionFTM';
+
+        if(difficulty == "" || questionType == "" || prompt == "" || anyinputempty){
+          if (!attemptMade) {
+            const newDiv = document.createElement("div");
+            const newContent = document.createTextNode("Cannot Submit: 1 or more fields invalid");
+            newDiv.appendChild(newContent);
+
+            document.getElementById("createQuestionForm").appendChild(document.createElement("br"));
+            document.getElementById("createQuestionForm").appendChild(newDiv);
+            attemptMade = true;
+          }
+          else{
+              document.getElementById("createQuestionForm").lastChild.innerHTML = "Cannot Submit: 1 or more fields invalid";
+          }
+        }else{
+          
+          const data = {difficulty, questionType, prompt, inputvals, outputvals, requestType};
+
+          const options = {
+            method:'POST',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify(data)
+          };
+          console.log(data);
+          fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+          .then(response => response.json())
+          .then(data => {
+            //console.log(data);
+            if(data.didWork == 1){
+              location.assign('http://cs490testcenter.ddns.net:50000/portal/t/CreateQuestion.html');
+            }else{
+              if (!attemptMade) {
+              const newDiv = document.createElement("div");
+              const newContent = document.createTextNode("Question already exists");
+              newDiv.appendChild(newContent);
+
+              document.getElementById("createQuestionForm").appendChild(document.createElement("br"));
+              document.getElementById("createQuestionForm").appendChild(newDiv);
+              attemptMade = true;
+              }
+              else{
+                document.getElementById("createQuestionForm").lastChild.innerHTML = "Question already exists";
+              }
+            } 
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+        }        
+      }
+    </script>
+  </body>
+</html>

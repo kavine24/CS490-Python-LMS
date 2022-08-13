@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Review Exam</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  </head>
+  <body>
+    <header class="mainHeader">
+      <h1 id="header" class="header"></h1>
+      <ul class="navLIST">
+          <li><a href="http://cs490testcenter.ddns.net:50000/portal/t/Home.php">Home</a></li>
+          <li><a href="http://cs490testcenter.ddns.net:50000">Sign Out</a></li>
+        </ul>
+      <br>
+    </header>
+    
+    <main id="reviewDiv">
+      <button id="goBackHome" class="btn btn-success submit" onclick = save()>Save</button>
+      <button id="goBackHome" class="btn btn-success submit" onclick = goBack()>Go Back</button>
+    </main>   
+    
+      
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      var requestType = 'ReviewExamTeacherFTM';
+      const studentExamsID = urlParams.get('studentExamsID');
+      
+      var questions;
+      var pointsAndComments = [];
+
+      var graded = true;
+
+      function displayExams(){
+        const data = {studentExamsID, requestType};
+        
+        const options = {
+          method:'POST',
+          headers: {
+              "Content-type": "application/json; charset=UTF-8"
+          },
+          body: JSON.stringify(data)
+        };
+        
+        fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          //console.log(data);
+          questions = data.answers;
+
+          const header = document.getElementById("header");
+          header.innerHTML = data.examData.examName;
+
+          const points = document.createTextNode("Grade: " + data.examData.PointsEarned + "/" + data.examData.TotalPoints);
+          document.getElementById('reviewDiv').insertBefore(points, document.getElementById("goBackHome"));
+          document.getElementById('reviewDiv').insertBefore(document.createElement("br"), document.getElementById("goBackHome"));
+          document.getElementById('reviewDiv').insertBefore(document.createElement("br"), document.getElementById("goBackHome"));
+
+          for(let i = 0; i < data.answers.length; i++){
+            const div = document.createElement("div");
+            const question = document.createElement("label");
+            question.setAttribute("class", "container")
+
+            question.appendChild(document.createTextNode("Question " + (i+1)));
+            question.appendChild(document.createElement("br"));
+
+            question.appendChild(document.createTextNode(data.answers[i].pointsCorrect + " / " + data.answers[i].points));
+            question.appendChild(document.createElement("br"));
+
+            question.appendChild(document.createTextNode("Type: " + data.answers[i].type));
+            question.appendChild(document.createElement("br"));
+
+            question.appendChild(document.createTextNode("Difficulty: " + data.answers[i].difficulty));
+            question.appendChild(document.createElement("br"));
+
+            question.appendChild(document.createTextNode("Question: " + data.answers[i].question));
+            question.appendChild(document.createElement("br"));
+
+            input = document.createElement("textarea");
+            input.readOnly = "true";
+            input.setAttribute("rows", "15");
+            input.setAttribute("cols", "95");
+            input.innerHTML = data.answers[i].answer;
+            
+            question.appendChild(document.createElement("br"));
+            question.appendChild(input);
+
+            question.appendChild(document.createElement("br"));
+            question.appendChild(document.createTextNode("Comments: "));
+
+            question.appendChild(document.createElement("br"));
+            const comments = document.createElement("textarea");
+            comments.setAttribute("rows", "5");
+            comments.setAttribute("cols", "95");
+            comments.innerHTML = data.answers[i].comments;
+            question.appendChild(comments);
+
+            div.appendChild(question);
+
+            if(data.answers[i].pointsTable.length > 0){
+              const reviewTable = document.createElement("table");
+              reviewTable.setAttribute("class", "table");
+
+              const reviewTableHead = document.createElement("thead");
+              const tableRow1 = document.createElement("tr");
+              tableRow1.setAttribute("class", "filters");
+
+              const tableHeader1 = document.createElement("th");
+              tableHeader1.innerHTML = "Case #";
+              
+              const tableHeader2 = document.createElement("th");
+              tableHeader2.innerHTML = "Input";
+
+              const tableHeader3 = document.createElement("th");
+              tableHeader3.innerHTML = "Expected";
+
+              const tableHeader4 = document.createElement("th");
+              tableHeader4.innerHTML = "Recieved";
+
+              const tableHeader5 = document.createElement("th");
+              tableHeader5.innerHTML = "Points Earned";
+
+              const tableHeader6 = document.createElement("th");
+              tableHeader6.innerHTML = "Change Points";
+
+              tableRow1.appendChild(tableHeader1);
+              tableRow1.appendChild(tableHeader2);
+              tableRow1.appendChild(tableHeader3);
+              tableRow1.appendChild(tableHeader4);
+              tableRow1.appendChild(tableHeader5);
+              tableRow1.appendChild(tableHeader6);
+
+              reviewTableHead.appendChild(tableRow1);
+              reviewTable.appendChild(reviewTableHead);
+
+              const tableBody = document.createElement("tbody");
+              pointChanges = [];
+              for(let j=0; j < data.answers[i].pointsTable.length; j++) {
+
+                const tableRowTR = document.createElement("tr");
+
+                const tableBody1 = document.createElement("td");
+                tableBody1.innerHTML = j + 1;
+                
+                const tableBody2 = document.createElement("td");
+                tableBody2.innerHTML = data.answers[i].pointsTable[j].input;
+
+                const tableBody3 = document.createElement("td");
+                tableBody3.innerHTML = data.answers[i].pointsTable[j].expected;
+
+                const tableBody4 = document.createElement("td");
+                tableBody4.innerHTML = data.answers[i].pointsTable[j].recieved;
+
+                const tableBody5 = document.createElement("td");
+                tableBody5.innerHTML = data.answers[i].pointsTable[j].correct;
+
+                const tableBody6 = document.createElement("td");
+                const changePoints = document.createElement("input")
+                changePoints.setAttribute("type", "number");
+                tableBody6.appendChild(changePoints);
+                pointChanges.push({ptID: data.answers[i].pointsTable[j].pointsTableID, points: changePoints});
+
+                tableRowTR.appendChild(tableBody1);
+                tableRowTR.appendChild(tableBody2);
+                tableRowTR.appendChild(tableBody3);
+                tableRowTR.appendChild(tableBody4);
+                tableRowTR.appendChild(tableBody5);
+                tableRowTR.appendChild(tableBody6);
+
+                tableBody.appendChild(tableRowTR);
+              }
+              reviewTable.appendChild(tableBody);
+
+              const tableRowContraints = document.createElement("tr");
+
+              const tableHead1 = document.createElement("th");
+              tableHead1.innerHTML = "Other Criteria";
+
+              const tableHead2 = document.createElement("th");
+              tableHead2.innerHTML = "Criteria Passed";
+              
+              const tableHead3 = document.createElement("th");
+              tableHead3.innerHTML = "Points Earned";
+
+              const tableHead4 = document.createElement("th");
+              tableHead4.innerHTML = "Change Points";
+
+              tableRowContraints.appendChild(tableHead1);
+              tableRowContraints.appendChild(tableHead2);
+              tableRowContraints.appendChild(tableHead3);
+              tableRowContraints.appendChild(tableHead4);
+
+              tableBody.appendChild(tableRowContraints);
+
+              numConsts = parseInt(data.answers[i].fNeeded) + parseInt(data.answers[i].wNeeded) + parseInt(data.answers[i].rNeeded); 
+                
+              if(numConsts > 0) {
+                if (data.answers[i].fNeeded == "1") {
+                  const tableCriteria = document.createElement("tr");
+
+                  const tableBody1 = document.createElement("td");
+                  tableBody1.innerHTML = "For Loop";
+                  
+                  const tableBody2 = document.createElement("td");
+                  tableBody2.innerHTML = parseFloat(data.answers[i].fCorrect) > 0 ? "Yes" : "No";
+
+                  const tableBody3 = document.createElement("td");
+                  tableBody3.innerHTML = data.answers[i].fCorrect;
+
+                  const tableBody4 = document.createElement("td");
+                  const changePoints = document.createElement("input")
+                  changePoints.setAttribute("type", "number");
+                  tableBody4.appendChild(changePoints);
+                  pointChanges.for = changePoints;
+                
+                  tableCriteria.appendChild(tableBody1);
+                  tableCriteria.appendChild(tableBody2);
+                  tableCriteria.appendChild(tableBody3);
+                  tableCriteria.appendChild(tableBody4);
+
+                  tableBody.appendChild(tableCriteria);
+                }
+
+                if (data.answers[i].wNeeded == "1") {
+                  const tableCriteria = document.createElement("tr");
+
+                  const tableBody1 = document.createElement("td");
+                  tableBody1.innerHTML = "While Loop";
+                  
+                  const tableBody2 = document.createElement("td");
+                  tableBody2.innerHTML = parseFloat(data.answers[i].wCorrect) > 0 ? "Yes" : "No";
+                  
+                  const tableBody3 = document.createElement("td");
+                  tableBody3.innerHTML = data.answers[i].wCorrect;
+
+                  const tableBody4 = document.createElement("td");
+                  const changePoints = document.createElement("input")
+                  changePoints.setAttribute("type", "number");
+                  tableBody4.appendChild(changePoints);
+                  pointChanges.while = changePoints;
+                
+                  tableCriteria.appendChild(tableBody1);
+                  tableCriteria.appendChild(tableBody2);
+                  tableCriteria.appendChild(tableBody3);
+                  tableCriteria.appendChild(tableBody4);
+                  tableBody.appendChild(tableCriteria);
+                }
+
+                if (data.answers[i].rNeeded == "1") {
+                  const tableCriteria = document.createElement("tr");
+
+                  const tableBody1 = document.createElement("td");
+                  tableBody1.innerHTML = "Recursion";
+                  
+                  const tableBody2 = document.createElement("td");
+                  tableBody2.innerHTML = parseFloat(data.answers[i].rCorrect) > 0 ? "Yes" : "No";
+
+                  const tableBody3 = document.createElement("td");
+                  tableBody3.innerHTML = data.answers[i].rCorrect;
+
+                  const tableBody4 = document.createElement("td");
+                  const changePoints = document.createElement("input")
+                  changePoints.setAttribute("type", "number");
+                  tableBody4.appendChild(changePoints);
+                  pointChanges.recursive = changePoints;
+                
+                  tableCriteria.appendChild(tableBody1);
+                  tableCriteria.appendChild(tableBody2);
+                  tableCriteria.appendChild(tableBody3);
+                  tableCriteria.appendChild(tableBody4);
+
+                  tableBody.appendChild(tableCriteria);
+                }
+              } 
+
+
+              const tableCriteriaHeader = document.createElement("tr");
+
+              const tableBodyF1 = document.createElement("td");
+              tableBodyF1.innerHTML = "Function Header";
+              
+              const tableBodyF2 = document.createElement("td");
+              tableBodyF2.innerHTML = parseFloat(data.answers[i].headerCorrect) > 0 ? "Yes" : "No";
+
+              const tableBodyF3 = document.createElement("td");
+              tableBodyF3.innerHTML = data.answers[i].headerCorrect;
+
+              const tableBodyF4 = document.createElement("td");
+              const changePoints = document.createElement("input")
+              changePoints.setAttribute("type", "number");
+              tableBodyF4.appendChild(changePoints);
+              pointChanges.header = changePoints;
+                
+              tableCriteriaHeader.appendChild(tableBodyF1);
+              tableCriteriaHeader.appendChild(tableBodyF2);
+              tableCriteriaHeader.appendChild(tableBodyF3);
+              tableCriteriaHeader.appendChild(tableBodyF4);
+
+              tableBody.appendChild(tableCriteriaHeader);
+
+              question.appendChild(reviewTable);
+
+              const pac = {pointChanges, comments};
+
+              pointsAndComments.push(pac)
+            }
+            else{
+              graded = false;
+
+              question.appendChild(document.createElement("br"));
+              question.appendChild(document.createTextNode("This Question has not been autograded"));
+
+              var pointChangesEmpty = []
+
+              const pac = {pointChangesEmpty, comments};
+
+              pointsAndComments.push(pac)
+            }
+            
+
+            document.getElementById("reviewDiv").insertBefore(div, document.getElementById("goBackHome"));
+            document.getElementById("reviewDiv").insertBefore(document.createElement("br"), document.getElementById("goBackHome"));
+            document.getElementById("reviewDiv").insertBefore(document.createElement("br"), document.getElementById("goBackHome"));
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+                
+      };
+      function save(){
+        // console.log(questions);
+        // console.log(pointsAndComments);
+
+        const gradeChangesFormatted = [];
+        
+        for(let i = 0; i<questions.length; i++){
+          var sum = 0;
+          const ptNew = [];
+          var cNew = {functionCorrect: 0, fCorrect: 0, wCorrect: 0, rCorrect: 0};
+          if(graded){
+            let j = 0;
+            for(j; j<questions[i].pointsTable.length; j++){
+              if(pointsAndComments[i].pointChanges[j].points.value != ""){
+                ptNew.push({pointsTableID: pointsAndComments[i].pointChanges[j].ptID, pointsEarned: pointsAndComments[i].pointChanges[j].points.value});
+                sum+=parseFloat(pointsAndComments[i].pointChanges[j].points.value);
+              }else{
+                ptNew.push({pointsTableID: pointsAndComments[i].pointChanges[j].ptID, pointsEarned: questions[i].pointsTable[j].correct});
+                sum+=parseFloat(questions[i].pointsTable[j].correct);
+              }
+            }
+
+            if (questions[i].fNeeded == "1") {
+              cNew.fCorrect = pointsAndComments[i].pointChanges.for.value != "" ? parseFloat(pointsAndComments[i].pointChanges.for.value) : parseFloat(questions[i].fCorrect);
+            }
+            if (questions[i].wNeeded == "1") {
+              cNew.wCorrect = pointsAndComments[i].pointChanges.while.value != "" ? parseFloat(pointsAndComments[i].pointChanges.while.value) : parseFloat(questions[i].wCorrect);
+            }
+            if (questions[i].rNeeded == "1") {
+              cNew.rCorrect = pointsAndComments[i].pointChanges.recursive.value != "" ? parseFloat(pointsAndComments[i].pointChanges.recursive.value) : parseFloat(questions[i].rCorrect);
+            }
+            cNew.functionCorrect = pointsAndComments[i].pointChanges.header.value != "" ? parseFloat(pointsAndComments[i].pointChanges.header.value) : parseFloat(questions[i].headerCorrect);
+            sum += (cNew.fCorrect + cNew.wCorrect + cNew.rCorrect + cNew.functionCorrect);
+          }
+          
+
+          gradeChangeFormatted = {
+            studentExamsID: questions[i].studentExamsID,
+            questionID: questions[i].questionID,
+            totalPoints: sum,
+            newPointsTable: ptNew.length > 0 ? ptNew : "emptyLOL",
+            newConstraints: cNew,
+            comments: pointsAndComments[i].comments.value
+          }
+          gradeChangesFormatted.push(gradeChangeFormatted);
+        }
+
+        // console.log(gradeChangesFormatted);
+
+        requestType = "ChangeGradesFTM"
+        const data = {gradeChangesFormatted, requestType};
+
+        const options = {
+          method:'POST',
+          headers: {
+              "Content-type": "application/json; charset=UTF-8"
+          },
+          body: JSON.stringify(data)
+        };
+
+        fetch('http://cs490testcenter.ddns.net:50000/portal/frontBrowser.php', options)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          if(data.didWork == 1){
+            location.assign(window.location.href);
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      }
+      function goBack(){
+        location.assign('http://cs490testcenter.ddns.net:50000/portal/t/ReviewAndGradeExams.html');
+      }
+      displayExams();
+    </script>
+    
+  </body>
+</html> 

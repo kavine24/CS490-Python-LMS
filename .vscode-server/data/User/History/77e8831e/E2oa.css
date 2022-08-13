@@ -1,0 +1,260 @@
+body {
+  background-image: url(portal/pictures/background.jpg);
+}
+
+.header {
+  color: #97BC62FF;
+  background-color: black;
+  padding: 14px 16px;
+  margin-top: 0px;
+}
+
+.submit, .userSubmit, .examTakeButtons, .examReviewButtons {
+  padding: 10px 10px;
+  margin: 0px 0px 15px 0px; 
+  font-size: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 9px #0e4d10;
+}
+
+.submit:hover, .userSubmit:hover { 
+  background-color: #215f23;
+  box-shadow: 0 9px #1f9923;
+}
+
+.submit:active, .userSubmit:active { 
+  box-shadow: 0 5px #1C7F20;
+  transform: translateY(4px)
+}
+
+.panel-heading, .panel-title {
+  border-color: #4CAF50 !important;
+  background-color: #0e4d10 !important;
+}
+
+/* .panel-title th {
+  border-color: #1f9923;
+  background-color: #1C7F20;
+} */
+
+.btn-primary {
+  background-color: #0e4d10 !important;
+  border-color: #4CAF50 !important;
+}
+
+.btn-success {
+  background-color: #198754 !important;
+  border-color: #198754 !important;
+}
+
+#submit {
+  margin: 20px 20px;
+}
+
+#goBackHome {
+  margin: 20px 15px;
+}
+
+.filterable {
+  margin-top: 15px;
+}
+
+.filterable .panel-heading .pull-right {
+  margin-top: -20px;
+}
+
+.filterable .filters input[disabled] {
+  background-color: transparent;
+  border: none;
+  cursor: auto;
+  box-shadow: none;
+  padding: 0;
+  height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+  color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+  color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+  color: #333;
+}
+
+.container {
+  background-color: #a2a2a2;
+  background-image: url(portal/pictures/divimage.jpg); 
+  padding: 14px 16px;
+}
+
+.mainHeader {
+  background-color: black;
+  max-height: 70px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+  top: 0;
+  width: 100%;
+  border-bottom: solid 3px black;
+}
+
+.navLIST {
+  margin-top: 20px;
+  display: flex;
+}
+
+.navLIST li {
+  display: inline-block;
+  margin-left: 0;
+  color: #97BC62FF;
+}
+
+.navLIST li a {
+  background-color: black;
+  text-decoration: none;
+  border-left: 2px solid green;
+  color: #97BC62FF;
+  padding: 0px 25px;
+}
+
+.navLIST li a:hover {
+  background-color: black;
+  color: #00ff08;
+  text-decoration: underline;
+}
+
+.legend {
+  margin: 24px 0px 0px !important;
+  border: 2px solid #97BC62FF;
+  padding: 0px !important;
+  background-color: #0e4d10;
+}
+
+.legend li a {
+  text-decoration: none;
+  color: #97BC62FF;
+  padding: 10px 25px;
+}
+
+.legend li a:hover {
+  background-color: black;
+  color: #00ff08;
+  text-decoration: underline;
+}
+
+/* body {
+  background-image: url(portal/pictures/background.jpg);
+  text-align: center;
+  margin: auto;
+}
+
+#indexLog, h1 {
+  color: #97BC62FF;
+  margin: 0;
+  overflow: hidden;
+  background-color: black;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.forms {
+  text-align: center;
+  display: inline-block;
+  overflow-wrap: break-word;
+}
+
+.credentialStyle {
+  color: #97BC62FF;
+  margin: 0;
+  padding: 0px 0px 20px;
+  font-size: 20px;
+  text-shadow: .5px .5px 0 #000;
+}
+
+.submit, .userSubmit, .examTakeButtons, .examReviewButtons {  
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 9px #1C7F20;
+  margin: 10px 0px;
+}
+
+.submit:hover, .userSubmit:hover { 
+  background-color: #3e8e41;
+  box-shadow: 0 9px #1C7F20;
+}
+
+.submit:active, .userSubmit:active { 
+  box-shadow: 0 5px #1C7F20;
+  transform: translateY(4px)
+}
+
+#createQuestionForm {
+  padding: 10px;
+  text-align: center;
+}
+
+div {
+  border-radius: 5px;
+  background-color: #a2a2a2;
+  background-image: url(portal/pictures/divimage.jpg); 
+  padding: 20px;
+  text-align: center;
+  display: inline-block;
+  max-width: 750px;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  display: inline-block;
+}
+
+.centeredsearch {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  display: inline-block;
+}
+
+.left {
+  left: 0;
+  display: inline-block;
+}
+
+
+.right {
+  right: 0;
+  display: inline-block;
+}
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: absolute;
+}
+table , th, td{
+  border: 1px solid;
+  width: 100%;
+} */
